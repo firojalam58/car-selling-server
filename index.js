@@ -4,6 +4,7 @@ const cors = require('cors')
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
+const { query } = require('express');
 const app = express()
 require('dotenv').config()
 
@@ -13,7 +14,6 @@ require('dotenv').config()
 // middle were 
 app.use(cors())
 app.use(express.json())
-// let jwt = require('jsonwebtoken');
 // Mogodb Start 
 
 
@@ -26,6 +26,7 @@ async function run() {
     try {
         const productsCollections = client.db('carProducta').collection('allProducts');
         const categoriesCollections = client.db('carProducta').collection('categories');
+        const bookingCollections = client.db('carProducta').collection('bookings');
         const usersCollection = client.db('carProducta').collection('users')
         app.get('/products', async (req, res) => {
             const query = {};
@@ -74,7 +75,18 @@ async function run() {
             res.send(service)
         });
 
+        app.get('/bookings', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = await bookingCollections.find(query).toArray();
+            res.send(cursor);
+        })
 
+        app.post('/bookings', async (req, res) => {
+            const booking = req.body;
+            const result = await bookingCollections.insertOne(booking);
+            res.send(result)
+        });
 
 
         // app.get('/users/admin/:email', async (req, res) => {
