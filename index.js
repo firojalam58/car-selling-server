@@ -87,7 +87,19 @@ async function run() {
             const result = await bookingCollections.insertOne(booking);
             res.send(result)
         });
+        app.get('/products', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = await productsCollections.find(query).toArray();
+            res.send(cursor);
+        })
 
+        // add Product api setup
+        app.post('/products', async (req, res) => {
+            const ProductAdd = req.body;
+            const result = await productsCollections.insertOne(ProductAdd);
+            res.send(result)
+        });
 
         // app.get('/users/admin/:email', async (req, res) => {
         //     const email = req.params.email;
