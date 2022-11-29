@@ -87,7 +87,7 @@ async function run() {
             const result = await bookingCollections.insertOne(booking);
             res.send(result)
         });
-        app.get('/products', async (req, res) => {
+        app.get('/addproducts', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const cursor = await productsCollections.find(query).toArray();
@@ -95,9 +95,16 @@ async function run() {
         })
 
         // add Product api setup
-        app.post('/products', async (req, res) => {
+        app.post('/addproducts', async (req, res) => {
             const ProductAdd = req.body;
             const result = await productsCollections.insertOne(ProductAdd);
+            res.send(result)
+        });
+
+        app.delete('/addproducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await productsCollections.deleteOne(query);
             res.send(result)
         });
 
