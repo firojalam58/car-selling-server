@@ -173,6 +173,63 @@ async function run() {
             res.send(result);
 
         });
+        app.put('/reportproduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const option = {upsert:true};
+            const updateDoc = {
+                $set:{
+                    report:true
+                }
+            }
+            const result = await productsCollections.updateOne(query,updateDoc,option);
+            res.send(result);
+
+        });
+        app.get('/reportproduct',async (req, res)=>{
+            const query = {report:true}
+            const result = await productsCollections.find(query).toArray()
+            res.send(result)
+        })
+        app.delete('/reportproduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollections.deleteOne(query);
+            res.send(result);
+
+        });
+        app.put('/advertiseproduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const option = {upsert:true};
+            const updateDoc = {
+                $set:{
+                    advertise:true
+                }
+            }
+            const result = await productsCollections.updateOne(query,updateDoc,option);
+            res.send(result);
+
+        });
+        app.get('/advertiseproduct', async (req, res)=>{
+            const query = {advertise:true}
+            const result = await productsCollections.find(query).toArray();
+            res.send(result)
+        })
+
+        app.put('/allsellers/verify/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const option = {upsert:true};
+            const updateDoc = {
+                $set:{
+                    verify:true
+                }
+            }
+            const result = await usersCollection.updateOne(query,updateDoc,option);
+            res.send(result);
+
+        });
         app.get('/allbuyers', async (req, res) => {
             const query = {role: 'Buyer'};
             const result = await usersCollection.find(query).toArray();
@@ -191,6 +248,29 @@ async function run() {
         });
 
 
+//admin route
+app.get('/users/admin/:email', async(req, res)=>{
+    const email = req.params.email;
+    const query = {email: email};
+    const result = await usersCollection.findOne(query);
+    res.send({isAdmin: result?.role === 'Admin'});
+});
+
+//seller route
+app.get('/users/seller/:email', async(req, res)=>{
+    const email = req.params.email;
+    const query = {email: email};
+    const result = await usersCollection.findOne(query);
+    res.send({isSeller: result?.role === 'Seller'});
+})
+
+//buyer route
+app.get('/users/buyer/:email', async(req, res)=>{
+    const email = req.params.email;
+    const query = {email: email};
+    const result = await usersCollection.findOne(query);
+    res.send({isBuyer: result?.role === 'Buyer'});
+})
 
 
     }
