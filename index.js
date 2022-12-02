@@ -123,6 +123,16 @@ async function run() {
             const result = await bookingCollections.insertOne(booking);
             res.send(result)
         });
+        app.post('/products', async (req, res) => {
+            const ProductAdd = req.body;
+            const result = await productsCollections.insertOne(ProductAdd);
+            res.send(result)
+        });
+        app.post('/products', async (req, res) => {
+            const productInfo = req.body;
+            const addProduct = await productsCollections.insertOne(productInfo);
+            res.send(addProduct);
+        })
         app.get('/addproducts', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
